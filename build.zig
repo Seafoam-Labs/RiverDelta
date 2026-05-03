@@ -96,6 +96,7 @@ pub fn build(b: *Build) !void {
 
     scanner.addCustomProtocol(b.path("protocol/upstream/wlr-layer-shell-unstable-v1.xml"));
     scanner.addCustomProtocol(b.path("protocol/upstream/wlr-output-power-management-unstable-v1.xml"));
+    scanner.addCustomProtocol(b.path("protocol/upstream/wlr-screencopy-unstable-v1.xml"));
     scanner.addCustomProtocol(b.path("protocol/upstream/virtual-keyboard-unstable-v1.xml"));
 
     // Some of these versions may be out of date with what wlroots implements.
@@ -132,6 +133,7 @@ pub fn build(b: *Build) !void {
 
     scanner.generate("zwlr_output_power_manager_v1", 1);
     scanner.generate("zwlr_layer_shell_v1", 4);
+    scanner.generate("zwlr_screencopy_manager_v1", 3);
     scanner.generate("zwp_virtual_keyboard_manager_v1", 1);
 
     const wayland = b.createModule(.{ .root_source_file = scanner.result });

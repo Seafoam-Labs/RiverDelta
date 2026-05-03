@@ -361,7 +361,8 @@ fn allowlist(server: *Server, global: *const wl.Global) bool {
         global == server.input_manager.text_input_manager.global or
         global == server.input_manager.tablet_manager.global or
         global == server.input_manager.pointer_gestures.global or
-        global == server.idle_inhibit_manager.wlr_manager.global;
+        global == server.idle_inhibit_manager.wlr_manager.global or
+        global == server.screencopy_manager.global;
 }
 
 /// Returns true if the global is blocked for security contexts
@@ -371,7 +372,6 @@ fn blocklist(server: *Server, global: *const wl.Global) bool {
         global == server.layer_shell.global or
         global == server.layer_shell.wlr_shell.global or
         global == server.xkb_bindings.global or
-        global == server.screencopy_manager.global or
         global == server.image_copy_capture_manager.global or
         global == server.output_image_capture_source_manager.global or
         global == server.wlr_foreign_toplevel_manager.global or
