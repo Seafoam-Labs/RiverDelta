@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: © 2020 Seafoam Labs
+// SPDX-FileCopyrightText: © 2026 Seafoam Labs
 // SPDX-License-Identifier: GPL-3.0-only
 
 const build_options = @import("build_options");
@@ -166,19 +166,54 @@ pub fn main(init: std.process.Init.Minimal) anyerror!void {
     const child_pgid = if (startup_command) |cmd| blk: {
         log.info("running init executable '{s}'", .{cmd});
 
-        var env_map = try init.environ.createMap(util.gpa);
-        defer env_map.deinit();
+        // Build child env directly from the inherited environ, reusing the
+        // original NUL-terminated KEY=VALUE strings unchanged. This avoids
+        // round-tripping through EnvMap, which can mis-handle values containing
+        // whitespace or other characters on certain stdlib code paths and
+        // crash riverdelta on startup. Spaces in values are perfectly valid
+        // POSIX, so passing the kernel-supplied entries through verbatim is
+        // both correct and robust.
+        const wayland_display = try std.fmt.allocPrintSentinel(
+            util.gpa,
+            "WAYLAND_DISPLAY={s}",
+            .{socket},
+            0,
+        );
+        defer util.gpa.free(wayland_display);
 
-        try env_map.put("WAYLAND_DISPLAY", socket);
-
+        var display_buf: ?[:0]u8 = null;
+        defer if (display_buf) |d| util.gpa.free(d);
         if (build_options.xwayland) {
             if (server.xwayland) |xwayland| {
-                try env_map.put("DISPLAY", mem.sliceTo(xwayland.display_name, 0));
+                display_buf = try std.fmt.allocPrintSentinel(
+                    util.gpa,
+                    "DISPLAY={s}",
+                    .{mem.sliceTo(xwayland.display_name, 0)},
+                    0,
+                );
             }
         }
 
-        const env_block = try env_map.createPosixBlock(util.gpa, .{});
-        defer env_block.deinit(util.gpa);
+        var env_list: std.ArrayList(?[*:0]const u8) = .empty;
+        defer env_list.deinit(util.gpa);
+
+        // Iterate the inherited envp via its NUL-terminated many-pointer so we
+        // stop at the sentinel rather than walking past it. Using
+        // `block.view().slice` would include the trailing null entry and cause
+        // `mem.sliceTo` to dereference a null pointer.
+        const envp_in: [*:null]const ?[*:0]const u8 = init.environ.block.slice.ptr;
+        var i: usize = 0;
+        while (envp_in[i]) |entry| : (i += 1) {
+            const name = mem.sliceTo(entry, '=');
+            if (mem.eql(u8, name, "WAYLAND_DISPLAY")) continue;
+            if (mem.eql(u8, name, "DISPLAY")) continue;
+            try env_list.append(util.gpa, entry);
+        }
+        try env_list.append(util.gpa, wayland_display.ptr);
+        if (display_buf) |d| try env_list.append(util.gpa, d.ptr);
+        try env_list.append(util.gpa, null);
+
+        const envp: [*:null]const ?[*:0]const u8 = @ptrCast(env_list.items.ptr);
 
         const child_args = [_:null]?[*:0]const u8{ "/bin/sh", "-c", cmd, null };
 
@@ -195,7 +230,7 @@ pub fn main(init: std.process.Init.Minimal) anyerror!void {
 
         if (pid == 0) {
             process.cleanupChild();
-            if (posix.errno(posix.system.execve("/bin/sh", &child_args, env_block.slice.ptr)) != .SUCCESS) {
+            if (posix.errno(posix.system.execve("/bin/sh", &child_args, envp)) != .SUCCESS) {
                 posix.system.exit(1);
             }
         }
