@@ -1,5 +1,5 @@
 <!--
-SPDX-FileCopyrightText: © 2022 The River Developers
+SPDX-FileCopyrightText: © 2026 Seafoam Labs
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
 

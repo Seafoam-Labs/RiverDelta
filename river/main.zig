@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: © 2020 The River Developers
+// SPDX-FileCopyrightText: © 2020 Seafoam Labs
 // SPDX-License-Identifier: GPL-3.0-only
 
 const build_options = @import("build_options");
@@ -23,7 +23,7 @@ const Server = @import("Server.zig");
 const io = Io.Threaded.global_single_threaded.io();
 
 const usage: []const u8 =
-    \\usage: river [options]
+    \\usage: riverdelta [options]
     \\
     \\  -h                 Print this help message and exit.
     \\  -version           Print the version number and exit.
@@ -214,9 +214,9 @@ pub fn main(init: std.process.Init.Minimal) anyerror!void {
 fn defaultInitPath(environ: std.process.Environ) !?[:0]const u8 {
     const path = blk: {
         if (environ.getPosix("XDG_CONFIG_HOME")) |xdg_config_home| {
-            break :blk try fs.path.joinZ(util.gpa, &[_][]const u8{ xdg_config_home, "river/init" });
+            break :blk try fs.path.joinZ(util.gpa, &[_][]const u8{ xdg_config_home, "riverdelta/init" });
         } else if (environ.getPosix("HOME")) |home| {
-            break :blk try fs.path.joinZ(util.gpa, &[_][]const u8{ home, ".config/river/init" });
+            break :blk try fs.path.joinZ(util.gpa, &[_][]const u8{ home, ".config/riverdelta/init" });
         } else {
             return null;
         }

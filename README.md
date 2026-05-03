@@ -1,5 +1,5 @@
 <!--
-SPDX-FileCopyrightText: © 2020 The River Developers
+SPDX-FileCopyrightText: © 2026 Seafoam Labs
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
 
@@ -9,10 +9,14 @@ SPDX-License-Identifier: CC-BY-SA-4.0
 
 ## Overview
 
-River is a non-monolithic Wayland compositor. Unlike other Wayland compositors,
-river does not combine the compositor and window manager into one program.
-Instead, users can choose any window manager implementing the
-[river-window-management-v1] protocol.
+Riverdelta is a non-monolithic Wayland compositor. It is a fork of
+[river](https://codeberg.org/river/river), aimed at providing a distinct
+executable name to avoid conflicts while maintaining compatibility with the
+original ecosystem.
+
+Unlike other Wayland compositors, riverdelta does not combine the compositor
+and window manager into one program. Instead, users can choose any window
+manager implementing the [river-window-management-v1] protocol.
 
 Read my blog post, [Separating the Wayland Compositor and Window Manager](https://isaacfreund.com/blog/river-window-management/),
 for an in-depth explanation.
@@ -35,12 +39,12 @@ on our [wiki](https://codeberg.org/river/wiki).
 
 ## Features
 
-River defers all window management policy to a separate window manager
+Riverdelta defers all window management policy to a separate window manager
 implementing the [river-window-management-v1] protocol. This includes window
 position/size, pointer/keyboard bindings, focus management, window decorations,
 desktop shell graphics, and more.
 
-River itself provides frame perfect rendering, good performance, support for
+Riverdelta itself provides frame perfect rendering, good performance, support for
 many Wayland protocol extensions, robust Xwayland support, the ability to
 hot-swap window managers, and more.
 
@@ -60,9 +64,9 @@ Why split the window manager to a separate process?
 
 ## Building
 
-Note: If you are packaging river for distribution, see [PACKAGING.md](PACKAGING.md).
+Note: If you are packaging riverdelta for distribution, see [PACKAGING.md](PACKAGING.md).
 
-To compile river first ensure that you have the following dependencies
+To compile riverdelta first ensure that you have the following dependencies
 installed. The "development" versions are required if applicable to your
 distribution.
 
@@ -85,32 +89,19 @@ Run `zig build -h` to see a list of all options.
 
 ## Usage
 
-River can either be run nested in an X11/Wayland session or directly
-from a tty using KMS/DRM. Simply run the `river` command.
+Riverdelta can either be run nested in an X11/Wayland session or directly
+from a tty using KMS/DRM. Simply run the `riverdelta` command.
 
-On startup river will run an executable file at `$XDG_CONFIG_HOME/river/init`
+On startup riverdelta will run an executable file at `$XDG_CONFIG_HOME/riverdelta/init`
 if such an executable exists. If `$XDG_CONFIG_HOME` is not set,
-`~/.config/river/init` will be used instead.
+`~/.config/riverdelta/init` will be used instead.
 
 Usually this executable is a shell script which starts the user's window manager
 and any other long-running programs.
 
-For complete documentation see the `river(1)` man page.
+For complete documentation see the `riverdelta(1)` man page.
 
-## Strict No LLM / No AI Policy
 
-Use of generative AI/LLMs is strictly forbidden for all contributions to river.
-
-This includes bug reports and comments on the issue tracker.
-
-## Donate
-
-Unfortunately, the current pace of river's development is not sustainable
-without more financial support. If my work on river adds value to your life
-please consider setting up a recurring donation through [liberapay]. You can
-also support me with a one-time or monthly donation on [github sponsors] or
-[ko-fi] though I prefer liberapay as it is run by a non-profit. Thank you for
-your support!
 
 ## Licensing
 
@@ -119,9 +110,9 @@ all files have SPDX copyright and license information.
 
 In overview:
 
-- River's source code is released under the GPL-3.0-only license.
-- River's Wayland protocols are released under the MIT license.
-- River's logo and documentation are released under the CC-BY-SA-4.0 license.
+- Riverdelta's source code is released under the GPL-3.0-only license.
+- Riverdelta's Wayland protocols are released under the MIT license.
+- Riverdelta's logo and documentation are released under the CC-BY-SA-4.0 license.
 
 [river-window-management-v1]: https://isaacfreund.com/docs/wayland/river-window-management-v1
 [liberapay]: https://liberapay.com/ifreund
