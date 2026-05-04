@@ -3,7 +3,7 @@
   <component name="BuildScanner">
     <option name="projects">
       <list><![CDATA[{
-  "name": "river",
+  "name": "riverdelta",
   "version": "0.5.0-dev",
   "path": "/home/zoey/RiderProjects/RiverDelta",
   "steps": [

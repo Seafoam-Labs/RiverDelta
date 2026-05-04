@@ -82,8 +82,9 @@ distribution.
 
 Then run, for example:
 ```
-zig build -Doptimize=ReleaseSafe --prefix ~/.local install
+zig build -Doptimize=ReleaseSafe -Dxwayland--prefix ~/.local install
 ```
+
 To enable Xwayland support pass the `-Dxwayland` option as well.
 Run `zig build -h` to see a list of all options.
 
