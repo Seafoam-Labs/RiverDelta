@@ -104,6 +104,10 @@ For complete documentation see the `riverdelta(1)` man page.
 
 
 
+## TODO
+
+- Hook up config reloading
+
 ## Licensing
 
 This project follows the [REUSE Specification](https://reuse.software/spec-3.3/),
